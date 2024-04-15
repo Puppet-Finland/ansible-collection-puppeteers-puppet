@@ -1,0 +1,42 @@
+---
+- name: Create puppet apply environment
+  ansible.builtin.file:
+    path: "{{ puppetdb_base_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+- name: Create modules directory for puppet apply
+  ansible.builtin.file:
+    path: "{{ puppetdb_base_dir }}/modules"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+- name: Install puppetlabs-puppetdb module and dependencies
+  ansible.builtin.command:
+    cmd: /opt/puppetlabs/bin/puppet module install puppetlabs-puppetdb --version 7.13.0 --target-dir=/root/puppetdb/modules/
+    creates: "{{ puppetdb_base_dir }}/modules/puppetdb"
+- name: Install Puppet manifest
+  ansible.builtin.template:
+    src: templates/puppetdb.pp
+    dest: "{{ puppetdb_base_dir }}/puppetdb.pp"
+    owner: root
+    group: root
+    mode: 644
+- name: Ensure that LSB facts are present
+  ansible.builtin.import_role:
+    name: puppeteers.puppet.redhat_lsb_core
+- name: Enable legacy facts to make Puppet catalog compilation to work
+  community.general.ini_file:
+    create: false
+    owner: root
+    group: root
+    mode: '0644'
+    path: /etc/puppetlabs/puppet/puppet.conf
+    section: main
+    option: include_legacy_facts
+    value: true
+- name: Install PuppetDB
+  ansible.builtin.command:
+    cmd: "/opt/puppetlabs/bin/puppet apply {{ puppetdb_base_dir }}/puppetdb.pp --modulepath={{ puppetdb_base_dir }}/modules"

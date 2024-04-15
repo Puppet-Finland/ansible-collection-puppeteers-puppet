@@ -1,0 +1,3 @@
+---
+puppetdb_base_dir: /root/puppetdb
+puppetdb_puppetdb_module_version: 7.13.0

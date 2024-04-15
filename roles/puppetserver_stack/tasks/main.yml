@@ -1,0 +1,10 @@
+---
+- name: Set up Puppetserver
+  ansible.builtin.import_role:
+    name: puppeteers.puppet.puppetserver
+- name: Set up Puppet Agent
+  ansible.builtin.import_role:
+    name: puppeteers.puppet.puppet_agent
+- name: Set up PuppetDB
+  ansible.builtin.import_role:
+    name: puppeteers.puppet.puppetdb

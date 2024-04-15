@@ -1,0 +1,13 @@
+---
+- name: Validate parameters
+  ansible.builtin.assert:
+    that:
+      - puppet_puppetserver_manage_firewall is boolean
+
+- name: Set up puppetserver
+  ansible.builtin.import_tasks:
+    file: puppetserver.yml
+
+- name: Set up puppetserver firewall
+  ansible.builtin.import_tasks:
+    file: firewall.yml

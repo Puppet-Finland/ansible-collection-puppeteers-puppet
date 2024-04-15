@@ -1,0 +1,15 @@
+---
+- name: Install Puppet platform repository
+  ansible.builtin.import_role:
+    name: puppeteers.puppet.puppet_platform
+- name: Install puppet-agent
+  ansible.builtin.dnf:
+    name: puppet-agent
+    state: present
+- name: Configure puppet-agent
+  ansible.builtin.ini_file:
+    path: /etc/puppetlabs/puppet/puppet.conf
+    create: false
+    section: agent
+    option: server
+    value: "{{ puppet_puppet_agent_server }}"

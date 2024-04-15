@@ -1,0 +1,21 @@
+---
+- name: Upgrade all packages
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+- name: Install Java
+  ansible.builtin.dnf:
+    name: java-17-openjdk-headless
+    state: present
+- name: Install Puppet platform repository
+  ansible.builtin.import_role:
+    name: puppeteers.puppet.puppet_platform
+- name: Install puppetserver
+  ansible.builtin.dnf:
+    name: puppetserver
+    state: present
+- name: Start puppetserver
+  ansible.builtin.service:
+    name: puppetserver
+    enabled: true
+    state: started

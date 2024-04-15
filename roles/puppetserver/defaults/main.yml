@@ -1,0 +1,2 @@
+---
+puppet_puppetserver_manage_firewall: true

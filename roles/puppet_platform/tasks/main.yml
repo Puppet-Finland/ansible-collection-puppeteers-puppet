@@ -1,0 +1,9 @@
+---
+- name: Install Puppetlabs rpm GPG key
+  ansible.builtin.rpm_key:
+    key: http://yum.puppet.com/RPM-GPG-KEY-puppet-20250406
+    state: present
+- name: Enable Puppet platform repository
+  ansible.builtin.dnf:
+    name: http://yum.puppet.com/puppet8-release-el-9.noarch.rpm 
+    state: present

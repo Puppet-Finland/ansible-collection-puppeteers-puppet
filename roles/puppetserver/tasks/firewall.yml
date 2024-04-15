@@ -1,0 +1,16 @@
+---
+- name: Validate parameters
+  ansible.builtin.assert:
+    that:
+      - puppet_puppetserver_zone_name is string
+  when: puppet_puppetserver_manage_firewall
+
+- name: Allow access to Puppetserver through firewalld
+  ansible.builtin.import_role:
+    name: fedora.linux_system_roles.firewall
+  vars:
+    firewall:
+      - service: puppetmaster
+        zone: "{{ puppet_puppetserver_zone_name }}"
+        state: enabled
+  when: puppet_puppetserver_manage_firewall
