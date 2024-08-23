@@ -1,0 +1,4 @@
+#!/bin/sh
+#
+export PATH=/opt/puppetlabs/bin:/opt/puppetlabs/puppet/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+r10k deploy environment {{ puppeteers_puppet_r10k_autodeploy_branch }} --verbose=error -p

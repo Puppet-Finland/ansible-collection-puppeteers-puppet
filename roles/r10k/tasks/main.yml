@@ -1,0 +1,35 @@
+---
+- name: Validate parameters
+  ansible.builtin.assert:
+    that:
+      - puppeteers_puppet_r10k_autodeploy is boolean
+      - puppeteers_puppet_r10k_autodeploy_branch is string
+      - puppeteers_puppet_r10k_autodeploy_minute is string
+
+- name: Install rubygems
+  ansible.builtin.dnf:
+    name: rubygems
+    state: present
+
+- name: Install r10k
+  community.general.gem:
+    name: r10k
+    state: present
+
+- name: Create r10k wrapper script
+  ansible.builtin.template:
+    src: templates/r10k-deploy.sh.j2
+    dest: /usr/local/bin/r10k-deploy.sh
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Create r10k environment autodeploy cronjob
+  ansible.builtin.cron:
+    name: run r10k-deploy.sh
+    state: present
+    minute: "{{ puppeteers_puppet_r10k_autodeploy_minute }}"
+    hour: "*"
+    job: "/usr/local/bin/r10k-autodeploy.sh"
+    user: root
+  when: puppeteers_puppet_r10k_autodeploy

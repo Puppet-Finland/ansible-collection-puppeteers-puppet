@@ -1,0 +1,5 @@
+---
+puppeteers_puppet_r10k_autodeploy: false
+puppeteers_puppet_r10k_autodeploy_branch: 'production'
+puppeteers_puppet_r10k_autodeploy_minute: '50'
+
