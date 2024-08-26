@@ -24,6 +24,18 @@ This role installs r10k and an r10k wrapper script. It also optionally adds a
 cronjob that deploys the default environment with r10k automatically. The
 default parameters are:
 
-    puppeteers_puppet_r10k_autodeploy: false
-    puppeteers_puppet_r10k_autodeploy_branch: 'production'
-    puppeteers_puppet_r10k_autodeploy_minute: '50'
+* puppeteers_puppet_r10k_autodeploy: false
+* puppeteers_puppet_r10k_autodeploy_branch: 'production'
+* puppeteers_puppet_r10k_autodeploy_minute: '50'
+
+The role assumes that you'll use Git over SSH to clone your Puppet control
+repository. The parameters you need to define are:
+
+* *puppeteers_puppet_r10k_repo_url*: URL of your Puppet control repository
+* *puppeteers_puppet_r10k_repo_host*: Hostname of the Git provider which hosts your Puppet control repository
+* *puppeteers_puppet_r10k_repo_user*: Git/SSH user to clone the control repository as
+* *puppeteers_puppet_r10k_ssh_private_key*: SSH private key to user for cloning the control repository
+* *puppeteers_puppet_r10k_ssh_known_hosts*: a list of SSH known_hosts entries for your Git provider
+
+When properly configured the role does everything needed to make r10k work
+against your Puppet control repository.

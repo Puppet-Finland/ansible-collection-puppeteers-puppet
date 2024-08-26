@@ -5,6 +5,11 @@
       - puppeteers_puppet_r10k_autodeploy is boolean
       - puppeteers_puppet_r10k_autodeploy_branch is string
       - puppeteers_puppet_r10k_autodeploy_minute is string
+      - puppeteers_puppet_r10k_repo_url is string
+      - puppeteers_puppet_r10k_repo_host is string
+      - puppeteers_puppet_r10k_repo_user is string
+      - puppeteers_puppet_r10k_ssh_private_key is string
+      - puppeteers_puppet_r10k_ssh_known_hosts is not string and puppeteers_puppet_r10k_ssh_known_hosts is not mapping and puppeteers_puppet_r10k_ssh_known_hosts is iterable
 
 - name: Install rubygems
   ansible.builtin.dnf:
@@ -15,6 +20,64 @@
   community.general.gem:
     name: r10k
     state: present
+
+- name: Ensure that SSH config directory is present
+  ansible.builtin.file:
+    state: directory
+    path: /root/.ssh
+    owner: root
+    group: root
+    mode: 0700
+
+- name: Create SSH config for r10k
+  ansible.builtin.template:
+    src: templates/ssh-config.j2
+    dest: /root/.ssh/config
+    owner: root
+    group: root
+    mode: 0400
+
+- name: Create SSH known_hosts for r10k
+  ansible.builtin.lineinfile:
+    path: "/root/.ssh/known_hosts"
+    create: true
+    owner: root
+    group: root
+    mode: 0600
+    line: "{{ item }}"
+  loop: "{{ puppeteers_puppet_r10k_ssh_known_hosts }}"
+
+- name: Ensure that r10k config directory is present
+  ansible.builtin.file:
+    state: directory
+    path: /etc/puppetlabs/r10k
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Configure r10k
+  ansible.builtin.template:
+    src: templates/r10k.yaml.j2
+    dest: /etc/puppetlabs/r10k/r10k.yaml
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Ensure that r10k SSH private key directory is present
+  ansible.builtin.file:
+    state: directory
+    path: /etc/puppetlabs/r10k/ssh
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Ensure that r10k SSH private key is present
+  ansible.builtin.copy:
+    content: "{{ puppeteers_puppet_r10k_ssh_private_key }}"
+    dest: /etc/puppetlabs/r10k/ssh/r10k_key
+    owner: root
+    group: root
+    mode: 0600
 
 - name: Create r10k wrapper script
   ansible.builtin.template:
@@ -33,3 +96,12 @@
     job: "/usr/local/bin/r10k-autodeploy.sh"
     user: root
   when: puppeteers_puppet_r10k_autodeploy
+
+- name: Add /usr/local/bin to PATH
+  ansible.builtin.lineinfile:
+    path: "/root/.bashrc"
+    line: "export PATH=$PATH:/usr/local/bin"
+    create: true
+    owner: root
+    group: root
+    mode: 0644
