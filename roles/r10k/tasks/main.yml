@@ -11,15 +11,21 @@
       - puppeteers_puppet_r10k_ssh_private_key is string
       - puppeteers_puppet_r10k_ssh_known_hosts is not string and puppeteers_puppet_r10k_ssh_known_hosts is not mapping and puppeteers_puppet_r10k_ssh_known_hosts is iterable
 
-- name: Install rubygems
+- name: Install requirements for r10k
   ansible.builtin.dnf:
-    name: rubygems
+    name:
+      - gcc
+      - git
+      - rubygems
+      - ruby-devel
     state: present
 
 - name: Install r10k
   community.general.gem:
     name: r10k
     state: present
+    # Workaround for https://github.com/ansible-collections/community.general/issues/3259
+    user_install: false
 
 - name: Ensure that SSH config directory is present
   ansible.builtin.file:
