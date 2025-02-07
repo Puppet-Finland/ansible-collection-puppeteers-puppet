@@ -8,6 +8,10 @@
   ansible.builtin.import_tasks:
     file: puppetserver.yml
 
+- name: Set up fileserver shares
+  ansible.builtin.import_tasks:
+    file: fileserver.yml
+
 - name: Set up puppetserver firewall
   ansible.builtin.import_tasks:
     file: firewall.yml

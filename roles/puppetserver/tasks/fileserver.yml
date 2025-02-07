@@ -1,0 +1,23 @@
+---
+- name: Create default fileserver share
+  ansible.builtin.file:
+    path: /var/files
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Set default file share path
+  ansible.builtin.ini_file:
+    state: present
+    allow_no_value: true
+    create: true
+    section: files
+    option: "{{ item }}"
+    path: /etc/puppetlabs/puppet/fileserver.conf
+    owner: root
+    group: root
+    mode: '0644'
+  loop:
+    - "path /var/files"
+    - "allow *"
