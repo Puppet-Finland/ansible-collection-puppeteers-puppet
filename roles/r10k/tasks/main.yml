@@ -99,7 +99,7 @@
     state: present
     minute: "{{ puppeteers_puppet_r10k_autodeploy_minute }}"
     hour: "*"
-    job: "/usr/local/bin/r10k-autodeploy.sh"
+    job: "/usr/local/bin/r10k-deploy.sh"
     user: root
   when: puppeteers_puppet_r10k_autodeploy
 
