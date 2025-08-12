@@ -13,10 +13,12 @@ Only RHEL 9 and compatibles are supported currently.
 ## puppetserver_stack
 
 This is the main entrypoint for this collection. It installs and configures
-Puppetserver, PuppetDB and Puppet Agent. Variables you might want to set are:
+Puppetserver, PuppetDB and Puppet Agent. A cronjob is also installed to ensure
+stale Puppet reports dont persist. Variables you might want to set are:
 
     puppet_puppetserver_manage_firewall: true
     puppet_puppetserver_zone_name: public
+    puppet_puppetserver_report_purge_maxdays: 7
 
 ## r10k
 
