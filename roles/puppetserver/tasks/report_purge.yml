@@ -1,0 +1,16 @@
+---
+- name: Validate parameters
+  ansible.builtin.assert:
+    that:
+      - puppet_puppetserver_report_purge_maxdays is number
+      - puppet_puppetserver_report_purge_maxdays > 0
+  when: puppet_puppetserver_report_purge_maxdays
+
+
+- name: Ensure cron exists for stale report purging
+  ansible.builtin.cron:
+    name: "Purge Stale Puppetserver Reports"
+    minute: "0"
+    hour: "2"
+    user: "root"
+    job: "/usr/bin/find /opt/puppetlabs/server/data/puppetserver/reports/ -type f -mtime +{{puppet_puppetserver_report_purge_maxdays}} -delete"

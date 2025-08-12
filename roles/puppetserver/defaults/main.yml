@@ -1,2 +1,3 @@
 ---
 puppet_puppetserver_manage_firewall: true
+puppet_puppetserver_report_purge_maxdays: 7

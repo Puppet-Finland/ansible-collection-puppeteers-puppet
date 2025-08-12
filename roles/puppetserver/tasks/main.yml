@@ -15,3 +15,7 @@
 - name: Set up puppetserver firewall
   ansible.builtin.import_tasks:
     file: firewall.yml
+
+- name: Set up puppetserver report purge cron
+  ansible.builtin.import_tasks:
+    file: report_purge.yml
